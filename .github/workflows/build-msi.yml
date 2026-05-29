@@ -43,7 +43,7 @@ jobs:
         run: flutter config --enable-windows-desktop
 
       - name: Instalar WiX Toolset v4
-        run:
+        run: |
           dotnet tool install --global wix
           wix extension add WixToolset.UI.wixext
 
