@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WiX v4 — producto principal.
+  Los archivos de la app se incluyen desde _files_gen.wxs (generado por `wix harvest`).
+  No editar _files_gen.wxs manualmente; se regenera en cada build.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package
+    Name="Catálogo Interactivo"
+    Manufacturer="Alejandro Martin"
+    Version="${VERSION}"
+    UpgradeCode="A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
+    Language="3082"
+    Codepage="1252"
+    InstallerVersion="500"
+    Compressed="yes">
+
+    <!-- Upgrade limpio: desinstala versión anterior antes de instalar la nueva -->
+    <MajorUpgrade
+      DowngradeErrorMessage="Ya está instalada una versión más nueva de Catálogo Interactivo." />
+
+    <!-- UI estándar con selector de carpeta de destino -->
+    <ui:WixUI Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+    <!-- Directorios -->
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="Catalogo Interactivo" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Catálogo Interactivo" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- Accesos directos -->
+    <Component Id="AppShortcuts" Directory="ApplicationProgramsFolder">
+      <Shortcut Id="StartMenuShortcut"
+                Name="Catálogo Interactivo"
+                Target="[INSTALLFOLDER]catalogo_interactivo.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Description="Organizá tus URLs por categorías" />
+      <Shortcut Id="DesktopShortcut"
+                Name="Catálogo Interactivo"
+                Target="[INSTALLFOLDER]catalogo_interactivo.exe"
+                WorkingDirectory="INSTALLFOLDER" />
+      <Shortcut Id="UninstallShortcut"
+                Name="Desinstalar Catálogo Interactivo"
+                Target="[SystemFolder]msiexec.exe"
+                Arguments="/x [ProductCode]" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\CatalogoInteractivo"
+                     Name="installed"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+      <RemoveFolder Id="CleanupProgramsFolder"
+                    Directory="ApplicationProgramsFolder"
+                    On="uninstall" />
+    </Component>
+
+    <!-- Features -->
+    <Feature Id="MainApp" Title="Catálogo Interactivo" Level="1">
+      <!-- HarvestedFiles viene del archivo _files_gen.wxs generado por wix harvest -->
+      <ComponentGroupRef Id="HarvestedFiles" />
+      <ComponentRef Id="AppShortcuts" />
+    </Feature>
+
+  </Package>
+</Wix>
