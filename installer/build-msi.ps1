@@ -146,6 +146,7 @@ $xml = $template.
   Replace("@DIRS@", $dirXml.ToString().TrimEnd()).
   Replace("@COMPS@", $compXml.ToString().TrimEnd())
 
+New-Item -ItemType Directory -Force -Path (Split-Path $OutWxs) | Out-Null
 Set-Content -Path $OutWxs -Value $xml -Encoding UTF8
 Write-Host "WiX source generado: $OutWxs" -ForegroundColor DarkGray
 
