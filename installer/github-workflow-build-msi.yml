@@ -1,0 +1,67 @@
+name: Build Windows MSI
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (ej: 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-msi:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Obtener version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      - name: Habilitar soporte Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Instalar WiX Toolset v4
+        run: |
+          dotnet tool install --global wix --version 4.*
+          wix extension add WixToolset.UI.wixext/4.*
+
+      - name: Build Flutter + generar MSI
+        shell: pwsh
+        run: |
+          .\installer\build-msi.ps1 -Version "${{ steps.version.outputs.VERSION }}"
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CatalogoInteractivo-${{ steps.version.outputs.VERSION }}-MSI
+          path: '*.msi'
+          retention-days: 30
+
+      - name: Crear Release con MSI (solo en tags)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: '*.msi'
+          generate_release_notes: true
