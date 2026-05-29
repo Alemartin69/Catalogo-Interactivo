@@ -25,7 +25,7 @@ Write-Host "=== Catálogo Interactivo — Build MSI v$Version ===" -ForegroundCo
 
 # 0. Generar archivos de plataforma Windows (runner/, flutter/) si no existen
 Write-Host "`n[0/4] Generando archivos de plataforma Windows..." -ForegroundColor Yellow
-flutter create --platforms=windows .
+flutter create --platforms=windows --project-name catalogo_interactivo .
 if ($LASTEXITCODE -ne 0) { throw "flutter create falló" }
 
 # 1. Build Flutter Windows
