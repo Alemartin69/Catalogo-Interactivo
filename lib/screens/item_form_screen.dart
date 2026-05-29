@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/item.dart';
+import '../models/subcategory.dart';
 import '../providers/catalog_provider.dart';
 import '../utils/url_utils.dart';
 
@@ -54,7 +55,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
     final provider = context.watch<CatalogProvider>();
     final subs = _categoryId != null
         ? provider.subcategoriesFor(_categoryId!)
-        : <dynamic>[];
+        : <Subcategory>[];
 
     return Scaffold(
       appBar: AppBar(

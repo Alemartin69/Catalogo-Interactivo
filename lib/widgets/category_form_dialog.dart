@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Category;
 import 'package:uuid/uuid.dart';
 import '../models/category.dart';
 

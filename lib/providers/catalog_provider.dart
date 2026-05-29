@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import '../database/database_helper.dart';
 import '../models/category.dart';
 import '../models/subcategory.dart';
